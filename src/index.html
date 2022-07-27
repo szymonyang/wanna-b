@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Credit card form</title>
+    <style>
+        form {
+            width: 90vw;
+            max-width: 20em;
+        }
+
+        button {
+            margin-top: 2rem;
+        }
+
+        input {
+            border: 1px solid;
+            padding: 0.3em;
+            width: 100%;
+        }
+
+        label {
+            display: block;
+            font-size: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .date-code {
+            display: flex;
+            margin: 0 -1em;
+        }
+
+        .date-code div {
+            margin: 0 1em;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <main>
+        <div class="wrapper">
+            <form id="form">
+                <div>
+                    <label for="name">Name on card</label>
+                    <input type="text" id="card_name" name="card_name" autocomplete="cc-name">
+                </div>
+                <div class="card-number">
+                    <label>Card number</label>
+                    <input type="text" id="card_number" name="card_number" inputmode="numeric" autcomplete="cc-number"
+                        pattern="[0-9]+">
+                </div>
+                <div class="date-code">
+                    <div>
+                        <label for="expiry-date">Expiry date</label>
+                        <input type="text" id="card_expirationDate" name="card_expirationDate" class="expiry-date"
+                            autocomplete="cc-exp" placeholder="MM/YY" minlength="4" pattern="[0-9/]+">
+                    </div>
+                    <div>
+                        <label for="security-code">Security code</label>
+                        <input type="text" id="card_cvc" name="card_cvc" inputmode="numeric" minlength="3" maxlength="4"
+                            pattern="[0-9]+">
+                    </div>
+                </div>
+                <button>Pay $300.00</button>
+            </form>
+        </div>
+        <p id="log"></p>
+    </main>
+
+    <script type="text/javascript">
+
+        const logSubmit = async (event) => {
+            event.preventDefault();
+            const url = 'https://tnt5eqbjrb1.sandbox.verygoodproxy.com/post';
+            const log = document.getElementById('log');
+            const body = {
+                "card_number": document.getElementById("card_number").value,
+                "card_name": document.getElementById("card_name").value,
+                "card_cvc": document.getElementById("card_cvc").value,
+                "card_expirationDate": document.getElementById("card_expirationDate").value
+            }
+            console.log(body)
+
+            const fetchOptions = {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                    Accept: 'application/json',
+                },
+                body: JSON.stringify(body),
+            };
+
+            const res = await fetch(url, fetchOptions);
+            const data = await res.json()
+            log.textContent = JSON.stringify(data)
+        }
+
+        const form = document.getElementById('form');
+
+        form.addEventListener('submit', logSubmit);
+
+
+
+    </script>
+</body>
+
+</html>
